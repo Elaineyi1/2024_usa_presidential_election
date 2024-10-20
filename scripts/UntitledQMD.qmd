@@ -1,8 +1,0 @@
-```{r}
-poll_raw <- read.csv(here("downloads/election_prediction/inputs/data/president_polls.csv"))
-poll_raw
-```
-
-```{r}
-poll_raw |> group_by(candidate_name) |> count()
-```
