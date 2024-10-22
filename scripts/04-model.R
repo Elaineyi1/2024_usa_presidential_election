@@ -32,6 +32,8 @@ harris_model <- stan_glm(
   seed = 7
 )
 
+
+
 # Save the model to an RDS file
 saveRDS(
   harris_model,
