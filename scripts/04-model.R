@@ -2,7 +2,7 @@
 # Purpose: Create a model to predict the presidential election result
 # Author: Boxuan Yi
 # Email: boxuan.yi@mail.utoronto.ca
-# Date: 17 October 2024
+# Date: 22 October 2024
 # Prerequisites: None
 
 library(dplyr) 
@@ -31,8 +31,6 @@ harris_model <- stan_glm(
   prior_aux = exponential(rate = 1, autoscale = TRUE),
   seed = 7
 )
-
-
 
 # Save the model to an RDS file
 saveRDS(

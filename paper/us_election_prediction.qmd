@@ -24,7 +24,7 @@ The data utilized for analysis is presented in @sec-data. Following that, @sec-m
 
 # Data {#sec-data}
 ## Overview {#sec-data_overview}
-The data I use is from the ‘Presidential General Election Polls (Current Cycle)’ by FiveThirtyEight [@538NationalPresident]. The analysis and visualizations in this paper are based on poll results updated until October 17th. The dataset includes 3,227 polls from different pollsters asking participants who they support for the upcoming presidential election.
+The data I use is from the ‘Presidential General Election Polls (Current Cycle)’ by FiveThirtyEight [@538NationalPresident]. The analysis and visualizations in this paper are based on poll results updated until October 22th. The dataset includes 3,227 polls from different pollsters asking participants who they support for the upcoming presidential election.
 
 The key variables and their meanings from the dataset that I use are as follows: 
 
@@ -79,13 +79,12 @@ poll_harris_state_cleaned <- read_parquet(here::here("..", "inputs", "data_with_
 ```
 
 
-
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| label: fig-raw_grade
-#| fig-cap: Distribution of Numeric Grades for Polls Before Cleaning
+#| fig-cap: Distribution of Pollsters Numeric Grades Given by FiveThirtyEight Before Cleaning
 poll_raw |> ggplot(aes(x = numeric_grade)) +
   geom_histogram() + labs(
     x = "Numeric Grade of Pollsters",
@@ -98,32 +97,33 @@ Different polls from various pollsters have different methods for conducting sur
 More detailed measurements regarding YouGov can be found in @sec-appendix-methodology.
 
 ## Data Visualization and Analysis {#sec-data_data_visualization_and_analysis}
-After eliminating polls conducted by pollsters with a numeric grade lower than 2, the distribution of numeric grades is shown in @fig-numeric_grade. The median grade is now about 2.75, with most polls having a grade higher than 2.5. Examples of pollsters with a 3.0 grade include The New York Times/Siena College, ABC News/The Washington Post, and YouGov. Examples with a 2.5 grade are the Public Policy Institute of California, Pew Research Center, and the University of Illinois Springfield Survey Research Office [@538PollsterRatings].
+After eliminating polls conducted by pollsters with a numeric grade lower than 2, the distribution of numeric grades is shown in @fig-numeric_grade. The median grade is now about 2.75, with most polls having a grade higher than 2.5. Many state-level polls with population being 'Adults' have a grade of 3.0. Examples of pollsters with a 3.0 grade include The New York Times/Siena College, ABC News/The Washington Post, and YouGov. Examples with a 2.5 grade are the Public Policy Institute of California, Pew Research Center, and the University of Illinois Springfield Survey Research Office [@538PollsterRatings].
 
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| label: fig-numeric_grade
-#| fig-cap: Distribution of Numeric Grades for State and National Surveys After Cleaning
+#| fig-cap: Distribution of Pollster Numeric Grades by Population After Cleaning
 poll_cleaned |> 
   ggplot(aes(x = state_or_national, y = numeric_grade)) +
-  geom_boxplot() +
+  geom_boxplot() + 
+  geom_jitter(aes(color = population), width = 0.2, height = 0, alpha = 0.6) + 
   scale_y_continuous(breaks = seq(0, 3, by = 0.5)) +
-  labs(x = "State or National Survey",y = "Numeric Grade") +
+  labs(x = "State or National Survey", y = "Numeric Grade") +
   theme_classic()
 ```
 
-@fig-sample_size presents the frequency distribution of sample sizes. There are significantly more state surveys in total than national surveys. Most national surveys have sample sizes smaller than 2,500, while most state surveys have sizes smaller than 2,000. A few national surveys have larger sample sizes, as indicated by small red bumps around 7,500 and 20,000.
+Since most surveys have sample sizes below 2,500, @fig-sample_size uses the logarithm of sample sizes for clearer visualization. There are significantly more state surveys than national surveys overall. Most national surveys have sample sizes under 2,500, while most state surveys are below 2,000. A few national surveys exceed 7,000, as shown by small red bumps in the distribution.
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| label: fig-sample_size
-#| fig-cap: Frequency Distribution of Sample Sizes for State and National Surveys
+#| fig-cap: Frequency Distribution of Log-Transformed Sample Sizes for State and National Surveys
 
 poll_harris_cleaned |>
-  ggplot(aes(x = sample_size, color = state_or_national)) +
+  ggplot(aes(x = log(sample_size), color = state_or_national)) +
   geom_freqpoly() +
   labs(x = "Sample Size",y = "Number of occurrences", color = "National or State Survey") +
   theme_classic() + 
@@ -169,7 +169,7 @@ poll_harris_state_cleaned |>
   ) |>  
   mutate(
     Weighted_Avg_Harris_Support = round(Weighted_Avg_Harris_Support, 3)) |> 
-  rename('Survey State' = state, 'Nubmer of Survey' = Observations, 'Weighted Average Proportion of Harris Support' = Weighted_Avg_Harris_Support) |> 
+  rename('Survey State' = state, 'Number of Survey' = Observations, 'Weighted Average Proportion of Harris Support' = Weighted_Avg_Harris_Support) |> 
   kable()
 ```
 
@@ -217,7 +217,7 @@ ggplot(map_data1, aes(fill = average_harris_support_ratio, state = state)) +
 ```
 
 \newpage
-# Model
+# Model {#sec-model}
 ## Model Set-up {#sec-model_set_up}
 To predict the 2024 U.S. presidential election results, I employ a Bayesian regression model with a Normal distribution that incorporates multiple predictors using the programming language `R` [@r] and the package `rstanarm` [@rstanarm]. In this model, the dependent variable is the proportion of respondents who support Kamala Harris, which is assumed to be continuous when the sample size is sufficiently large. The goal of the model is to estimate how Harris’s support is influenced by four factors, which can be expressed as follows:
 $$
@@ -292,7 +292,7 @@ poll_harris_national_cleaned |>
 
 ```
 
-The predicted support by state is displayed in @tbl-state_prediction. Compared to @tbl-state, the proportion of support is overall more concentrated around 50%. Out of the 30 states with data, 15 states show higher support for Harris, 12 states have higher support for Trump, while 3 states have equal support for both candidates. Maryland still has a support rate for Harris that exceeds 60%, and other states with high support for Harris include Rhode Island, New Hampshire, Massachusetts, California, and Connecticut, all exceeding 55%. South Carolina is the only state with less than 45% support for Harris.
+The predicted support by state is displayed in @tbl-state_prediction. Compared to @tbl-state, the proportion of support is overall more concentrated around 50%. Out of the 30 states with data, 15 states show higher support for Harris, 12 states have higher support for Trump, while 3 states have equal support for both candidates. Maryland still has a support rate for Harris that exceeds 60%, and other states with high support for Harris include Rhode Island, New Hampshire, Massachusetts, Maine, California, and Connecticut, all exceeding 55%. South Carolina is the only state with less than 45% support for Harris.
 ```{r}
 #| message: false
 #| echo: false
@@ -310,7 +310,7 @@ poll_harris_state_cleaned |>
   rename('State' = state, 'Predicted Proportion of Support For Harris' = Weighted_Avg_Harris_Support) |> 
   kable()
 ```
-
+\newpage
 @fig-state_prediction uses a gradient colour scale to indicate the predicted support rate by state. States on the West Coast and in the Northeast show a higher rate of support for Harris, with Maryland and California being the bluest. In contrast, states in the Midwest have higher support for Trump, with South Carolina appearing the reddest. Compared to @fig-state, the overall colour is lighter, indicating that the model has mitigated certain biases and preferences.
 ```{r}
 #| message: false

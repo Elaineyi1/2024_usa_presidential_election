@@ -2,7 +2,7 @@
 # Purpose: Download and Read in data from fivethirtyeight
 # Author: Boxuan Yi
 # Email: boxuan.yi@mail.utoronto.ca
-# Date: 17 October 2024
+# Date: 22 October 2024
 # Prerequisites: None
 
 library(dplyr)

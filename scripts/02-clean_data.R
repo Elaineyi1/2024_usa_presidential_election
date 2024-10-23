@@ -75,7 +75,6 @@ poll_cleaned <- poll_cleaned |>
   ungroup() |> 
   select(-total_pct, -harris_pct)
 
-
 # Save the cleaned dataset
 write_parquet(x = poll_cleaned,
               sink = here("downloads/election_prediction/inputs/data/president_polls_cleaned.parquet"))
