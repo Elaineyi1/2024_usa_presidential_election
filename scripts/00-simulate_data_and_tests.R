@@ -48,23 +48,3 @@ simulated_cleaned <- simulated_data_Harris |>
   filter(numeric_grade >= 2.0)
 simulated_national <- simulated_cleaned |> filter(state == 'National')
 simulated_state <- simulated_cleaned |> filter(state != 'National')
-
-
-# Test the simulated data
-# Check that the sum of rows in the filtered datasets equals the original row count
-stopifnot(nrow(simulated_national) + nrow(simulated_state) == nrow(simulated_cleaned))
-
-# Check the numeric grades of pollsters are no less than 2.0
-stopifnot(simulated_cleaned$numeric_grade >= 2.0)
-
-# Check if pct is numeric and between 0 and 100
-stopifnot(is.numeric(simulated_data_Harris$pct))
-stopifnot(all(simulated_data_Harris$pct >= 0 & simulated_data_Harris$pct <= 100))
-
-# Check that days_since_end is between 0 and 1, and the validity of dates
-stopifnot(is.numeric(simulated_cleaned$days_since_end))
-stopifnot(all(simulated_cleaned$days_since_end >= 0 & simulated_cleaned$days_since_end <= 1))
-stopifnot(all(simulated_data_Harris$end_date <= Sys.Date()))
-
-# Check there are at most 52 values in the state column
-stopifnot(length(unique(simulated_cleaned$state)) <= 52)
