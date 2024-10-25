@@ -2,15 +2,11 @@
 # Purpose: Download and Read in data from fivethirtyeight
 # Author: Boxuan Yi
 # Email: boxuan.yi@mail.utoronto.ca
-# Date: 22 October 2024
+# Date: 25 October 2024
 # Prerequisites: None
 
-library(dplyr)
-library(tidyverse)
-library(here)
-library(janitor)
-library(knitr)
 library(readr)
+library(here)
 
 # Read the CSV file from the URL
 poll_raw <- read_csv(

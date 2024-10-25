@@ -2,10 +2,10 @@
 # Purpose: Clean the dataset
 # Author: Boxuan Yi
 # Email: boxuan.yi@mail.utoronto.ca
-# Date: 17 October 2024
+# Date: 25 October 2024
 # Prerequisites: Be familiar with the dataset and its methodology.
 
-library(her)
+library(here)
 library(dplyr)
 library(stringr)
 library(tidyr)
@@ -24,7 +24,7 @@ poll_cleaned <-
   select(
     poll_id, pollster_id, pollster, numeric_grade, state, sample_size, 
     population, party, candidate_name, pct, methodology, start_date, end_date) |>
-  drop_na(numeric_grade) |> filter(numeric_grade >= 2)
+  drop_na(numeric_grade) |> filter(numeric_grade >= 2.5)
 
 # Modify the state column
 poll_cleaned <- poll_cleaned |>

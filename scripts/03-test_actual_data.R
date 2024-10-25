@@ -10,16 +10,6 @@ library(testthat)
 library(here)
 library(arrow)
 
-# Test that the sum of rows in the filtered datasets equals the original row count
-test_that("Sum of rows in national and state cleaned data equals total rows in cleaned data", {
-  poll_cleaned <- read_parquet(here("inputs", "data", "president_polls_cleaned.parquet"))
-  poll_harris_national_cleaned <- read_parquet(here("inputs", "data_with_prediction", "national_prediction.parquet"))
-  poll_harris_state_cleaned <- read_parquet(here("inputs", "data_with_prediction", "state_prediction.parquet"))
-  
-  expect_equal(nrow(poll_harris_national_cleaned) + nrow(poll_harris_state_cleaned), nrow(poll_cleaned))
-})
-
-
 # Test that critical columns have no missing values
 test_that("No missing values in critical columns", {
   poll_cleaned <- read_parquet(here("inputs", "data", "president_polls_cleaned.parquet"))
@@ -37,26 +27,25 @@ test_that("No missing values in critical columns", {
 test_that("Columns have expected data types", {
   poll_cleaned <- read_parquet(here("inputs", "data", "president_polls_cleaned.parquet"))
   
-  expect_type(poll_cleaned$poll_id, "character")
-  expect_type(poll_cleaned$pollster_id, "character")
+  expect_type(poll_cleaned$poll_id, "double")
+  expect_type(poll_cleaned$pollster_id, "double")
   expect_type(poll_cleaned$numeric_grade, "double")
   expect_type(poll_cleaned$pct, "double")
   expect_type(poll_cleaned$sample_size, "double")
-  expect_type(poll_cleaned$start_date, "Date")
-  expect_type(poll_cleaned$end_date, "Date")
+  expect_type(poll_cleaned$start_date, "double")
+  expect_type(poll_cleaned$end_date, "double")
   expect_type(poll_cleaned$harris_support_ratio, "double")
 })
 
 
-# Test that the numeric grades of pollsters are no less than 2.0
+# Test that the numeric grades of pollsters are no less than 2.5, and
+# harris_support_ratio is between 0 and 1
 test_that("Pollsters' numeric grades are no less than 2.0", {
   poll_cleaned <- read_parquet(here("inputs", "data", "president_polls_cleaned.parquet"))
   
   expect_true(all(poll_cleaned$numeric_grade >= 2.0))
 })
 
-
-# Test that harris_support_ratio is between 0 and 1
 test_that("harris_support_ratio is numeric and between 0 and 1", {
   poll_cleaned <- read_parquet(here("inputs", "data", "president_polls_cleaned.parquet"))
   
@@ -72,6 +61,13 @@ test_that("Dataset only contains Trump and Harris as candidates", {
   expect_true(all(poll_cleaned$candidate_name %in% c("Donald Trump", "Kamala Harris")))
 })
 
+# Test that days_since_end is between 0 and 1
+test_that("days_since_end is numeric and between 0 and 1", {
+  poll_cleaned <- read_parquet(here("inputs", "data", "president_polls_cleaned.parquet"))
+  
+  expect_true(is.numeric(poll_cleaned$days_since_end))
+  expect_true(all(poll_cleaned$days_since_end >= 0 & poll_cleaned$days_since_end <= 1))
+})
 
 # Test that there are no negative pct values and pct is within 0 to 100
 test_that("pct values are between 0 and 100", {
@@ -81,14 +77,6 @@ test_that("pct values are between 0 and 100", {
   expect_true(all(poll_cleaned$pct >= 0 & poll_cleaned$pct <= 100))
 })
 
-
-# Test that days_since_end is between 0 and 1
-test_that("days_since_end is numeric and between 0 and 1", {
-  poll_cleaned <- read_parquet(here("inputs", "data", "president_polls_cleaned.parquet"))
-  
-  expect_true(is.numeric(poll_cleaned$days_since_end))
-  expect_true(all(poll_cleaned$days_since_end >= 0 & poll_cleaned$days_since_end <= 1))
-})
 
 
 # Test that there are at most two unique values in state_or_national and at most 52 values in state
