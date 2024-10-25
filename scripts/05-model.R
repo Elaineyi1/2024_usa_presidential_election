@@ -10,7 +10,7 @@ library(rstanarm)
 library(modelsummary)
 library(arrow)
 
-poll_cleaned <- read_parquet(file = here("downloads/election_prediction/inputs/data/president_polls_cleaned.parquet"))
+poll_cleaned <- read_parquet(here("inputs", "data", "president_polls_cleaned.parquet"))
 poll_harris_cleaned <- poll_cleaned |> filter(candidate_name == "Kamala Harris")
 
 # Create one dataset for national surveys and one for state surveys
@@ -34,8 +34,8 @@ harris_model <- stan_glm(
 
 # Save the model to an RDS file
 saveRDS(
-  harris_model,
-  file = here("downloads/election_prediction/models/model.rds")
+  object = harris_model,
+  file = here("models", "model.rds")
 )
 
 
@@ -49,9 +49,13 @@ poll_harris_state_cleaned <- poll_harris_state_cleaned |>
   mutate(predicted_harris_ratio = state_predict)
 
 # Save the prediction
-write_parquet(x = poll_harris_national_cleaned,
-              sink = here("downloads/election_prediction/inputs/data_with_prediction/national_prediction.parquet"))
+write_parquet(
+  x = poll_harris_national_cleaned,
+  sink = here("inputs", "data_with_prediction", "national_prediction.parquet")
+)
 
-write_parquet(x = poll_harris_state_cleaned,
-  sink = here("downloads/election_prediction/inputs/data_with_prediction/state_prediction.parquet"))
+write_parquet(
+  x = poll_harris_state_cleaned,
+  sink = here("inputs", "data_with_prediction", "state_prediction.parquet")
+)
 

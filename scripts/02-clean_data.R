@@ -5,7 +5,7 @@
 # Date: 17 October 2024
 # Prerequisites: Be familiar with the dataset and its methodology.
 
-library(here)
+library(her)
 library(dplyr)
 library(stringr)
 library(tidyr)
@@ -15,7 +15,7 @@ library(arrow)
 library(lubridate)
 
 # Read the dataset
-poll_raw <- read.csv(here("downloads/election_prediction/inputs/data/president_polls.csv"))
+poll_raw <- read_csv(here("inputs", "data", "president_polls.csv"))
 
 # Clean the dataset and eliminate the rows with a missing numeric grade value
 poll_cleaned <- 
@@ -76,6 +76,8 @@ poll_cleaned <- poll_cleaned |>
   select(-total_pct, -harris_pct)
 
 # Save the cleaned dataset
-write_parquet(x = poll_cleaned,
-              sink = here("downloads/election_prediction/inputs/data/president_polls_cleaned.parquet"))
+write_parquet(
+  x = poll_cleaned,
+  sink = here("inputs", "data", "president_polls_cleaned.parquet")
+)
 

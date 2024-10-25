@@ -21,5 +21,6 @@ poll_raw <- read_csv(
 # Write the CSV file to a local directory using the 'here' package
 write_csv(
   x = poll_raw,
-  file = here("downloads/election_prediction/inputs/data/president_polls.csv")
+  file = here("inputs", "data", "president_polls.csv")
 )
+

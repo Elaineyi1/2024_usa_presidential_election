@@ -1,13 +1,13 @@
 ---
-title: "Forecasting the 2024 U.S. Presidential Election"
-subtitle: "Harris Predicted to Win Popular Vote With 50.8% Popular Vote"
+title: "A Poll-of-Polls Forecast for the 2024 U.S. Presidential Election"
+subtitle: "Harris Predicted to Win the Popular Vote With 50.9% Over Trump"
 author: 
   - Boxuan Yi
 format: 
   pdf:
     documentclass: article
     geometry: margin = 1in
-    abstract: "The 2024 U.S. Presidential Election on November 5th will feature a contest between Democratic Vice President Kamala Harris and former Republican President Donald Trump. In this paper, I employ a poll-of-polls method and a Bayesian generalized linear model to predict the popular votes for both candidates. By filtering polls that ended within the last 60 days and were conducted by reliable pollsters, the results indicate that 50.8% of voters will support Harris, with her base concentrated in the West Coast and Northeast regions. The forecast of election results is important as it helps shape the campaign strategies of the two parties and understand U.S. citizens’ priority issues."
+    abstract: "The 2024 U.S. Presidential Election on November 5th will feature a contest between Democratic Vice President Kamala Harris and former Republican President Donald Trump. In this paper, I employ a poll-of-polls method and a Bayesian generalized linear model to predict the popular votes for both candidates. By filtering polls that ended within the last 60 days and were conducted by reliable pollsters, the results indicate that 50.9% of voters will support Harris, with her base concentrated in the West Coast and Northeast regions. The forecast of election results is important as it helps shape the campaign strategies of the two parties and understand U.S. citizens’ priority issues."
 date: today
 date-format: long
 number-sections: true
@@ -18,7 +18,7 @@ bibliography: references.bib
 # Introduction {#sec-introduction}
 The upcoming 2024 United States presidential election, scheduled for Tuesday, November 5, will see U.S. citizens electing the country’s president and vice president for the next four years. The current vice president, Kamala Harris, is the candidate from the Democratic Party, while Donald Trump, the former president from the Republican Party, is running for re-election for a nonconsecutive term. The United States elects its president through the Electoral College. The number of electoral votes assigned to each state depends on its representation in the Senate and House of Representatives, meaning it is possible to win the popular vote yet lose the election. Despite the significance of electoral votes and the presence of multiple candidates, this paper will focus on the popular votes of Kamala Harris and Donald Trump due to the dominance of the Democratic and Republican parties in the current U.S. political system. The electoral votes will be calculated only for states with data due to the limited information available for each state.
 
-In this paper, the estimand being explored is the popular vote for Kamala Harris and Donald Trump. I will use a Bayesian generalized linear model to fill this gap, with the following predictors: pollster, numeric grade of the pollster, recency of the poll, and the population of the respondent groups. Using the poll-of-polls method, which aggregates several polls to forecast results aiming for greater accuracy, the predicted national popular vote for Harris only considering the two candidates is 50.8%, which is 1.6% higher than Trump’s support. This difference will be smaller when accounting for all candidates in the 2024 presidential election. Based on state polls, 15 out of 30 states show higher support for Harris, 12 states show higher support for Trump, while 3 states have 50% support for each. It is also found that Harris's supporters are concentrated in the West Coast and Northeast regions, whereas Trump's supporters tend to be in the central part of the U.S. Presidential election forecasts have always been important as they help shape campaign strategies and understand U.S. citizens’ priority issues.
+In this paper, the estimand being explored is the popular vote for Kamala Harris and Donald Trump. I will use a Bayesian generalized linear model to fill this gap, with the following predictors: pollster, numeric grade of the pollster, recency of the poll, and the population of the respondent groups. Using the poll-of-polls method, which aggregates several polls to forecast results aiming for greater accuracy, the predicted national popular vote for Harris only considering the two candidates is 50.9%, which is 1.8% higher than Trump’s support. This difference will be smaller when accounting for all candidates in the 2024 presidential election. Based on state polls, 15 out of 30 states show higher support for Harris, 12 states show higher support for Trump, while 3 states have 50% support for each. It is also found that Harris's supporters are concentrated in the West Coast and Northeast regions, whereas Trump's supporters tend to be in the central part of the U.S. Presidential election forecasts have always been important because they help understand U.S. citizens' priority issues and assist parties in shaping campaign strategies for better decision-making.
 
 The data utilized for analysis is presented in @sec-data. Following that, @sec-model introduces the model created to forecast election outcomes. I will then explain the predicted results derived from the model in @sec-results. Lastly, @sec-discussions discusses the results in a broader context and address weaknesses of this paper as well as the future explorations. This paper uses the programming language `R` [@r]. The analysis, the model and all the visualizations use the following packages: `dplyr` [@dplyr], `tidyverse` [@tidyverse], `here` [@here], `janitor` [@janitor], `knitr` [@knitr], `readr` [@readr], `modelsummary` [@modelsummary], `ggplot2` [@ggplot2],  `statebins` [@statebins], `arrow` [@arrow], `stringr` [@stringr], `tidyr` [@tidyr], `lubridate` [@lubridate], `rstanarm` [@rstanarm], `bayesplot` [@bayesplot].
 
@@ -50,7 +50,7 @@ I will only consider polls with a numeric grade of at least 2.0 that ended no mo
 ## Methodology and Measurement {#sec-data_methodology_and_measurement}
 The method used to forecast the presidential election results is the poll-of-polls, which aggregates results from multiple polls instead of relying on a single survey, aiming to make the results more accurate and stable. In this method, each poll is assigned a weight based on factors such as sample size, recency, and the pollster’s historical accuracy. Therefore, the larger the weight, the more reliable the polls are in the aggregation.
 
-The dataset from FiveThirtyEight that I use for this forecast includes all publicly available scientific polls that meet methodological and ethical standards, including public partisan and internal campaign polls. This ensures that the polls included in their forecasts and models are based on sound survey methods and that pollsters are genuinely engaged in the pursuit of truth and knowledge [@go538sPolls]. The weight provided by FiveThirtyEight, referred to as `numeric_grade` in the dataset, is based on the historical track record and methodological transparency of each polling firm’s polls [@538PollsterRatings]. Additionally, polls receive reduced weight if the pollster who conducted them has released a large number of surveys in a short period of time. The weight ranges from 0.5 to 3.0, with 3.0 being the most reliable pollster. Out of 282 pollsters, 95 received a grade of no less than 2.0 [@538PollsterRatings]. As displayed in @fig-raw_grade, since the median numeric grade of all the polls in the dataset is between 1.5 and 2.0, I chose to eliminate polls with a grade lower than 2.0 to ensure the reliability and quantity of the data are good.
+The dataset from FiveThirtyEight that I use for this forecast includes all publicly available scientific polls that meet methodological and ethical standards, including public partisan and internal campaign polls. This ensures that the polls included in their forecasts and models are based on sound survey methods and that pollsters are genuinely engaged in the pursuit of truth and knowledge [@go538sPolls]. The weight provided by FiveThirtyEight, referred to as `numeric_grade` in the dataset, is based on the historical track record and methodological transparency of each polling firm’s polls [@538PollsterRatings]. Additionally, polls receive reduced weight if the pollster who conducted them has released a large number of surveys in a short period of time. The weight ranges from 0.5 to 3.0, with 3.0 being the most reliable pollster. Out of 282 pollsters, 95 received a grade of no less than 2.0 [@538PollsterRatings]. As shown in @fig-raw_grade, the median numeric grade of all polls in the dataset falls between 1.5 and 2.0. To ensure the quantity and reliability of the data, I decided to exclude polls with a numeric grade lower than 2.0. Examples of pollsters with a 3.0 grade include The New York Times/Siena College, ABC News/The Washington Post, and YouGov. Examples with a 2.5 grade are the Public Policy Institute of California, Pew Research Center, and the University of Illinois Springfield Survey Research Office [@538PollsterRatings].
 ```{r}
 #| include: false
 library(dplyr)
@@ -64,6 +64,7 @@ library(ggplot2)
 library(statebins)
 library(arrow)
 library(bayesplot)
+library(kableExtra)
 ```
 
 ```{r}
@@ -88,72 +89,91 @@ poll_harris_state_cleaned <- read_parquet(here::here("..", "inputs", "data_with_
 poll_raw |> ggplot(aes(x = numeric_grade)) +
   geom_histogram() + labs(
     x = "Numeric Grade of Pollsters",
-    y = "Number of occurrences"
+    y = "Number of Occurrences"
   )
 ```
 
 Different polls from various pollsters have different methods for conducting surveys that translate real-world phenomena into numerical data. However, the underlying logic is similar. Pollsters typically start by selecting a sample of the population that reflects the broader electorate; this could be a national survey, a state survey, or a target group. Based on the population sample and budget, the pollster will release the survey on a preferred platforms. For example, they might release the poll on social media if they want more general and diverse participants, or use news media to achieve a higher response rate. Good pollsters design questions that are clear and unbiased, often asking respondents to choose from a list of candidates or political parties. The survey usually includes additional questions, such as the age, gender, and education of the participants. Each response, representing a real-world decision, becomes an entry in a dataset that captures individual voting intentions.
 
-More detailed measurements regarding YouGov can be found in @sec-appendix-methodology.
+More detailed measurements regarding YouGov can be found in @sec-appendix-methodology. For the analysis below, the dataset used is cleaned.
 
 ## Data Visualization and Analysis {#sec-data_data_visualization_and_analysis}
-After eliminating polls conducted by pollsters with a numeric grade lower than 2, the distribution of numeric grades is shown in @fig-numeric_grade. The median grade is now about 2.75, with most polls having a grade higher than 2.5. Many state-level polls with population being 'Adults' have a grade of 3.0. Examples of pollsters with a 3.0 grade include The New York Times/Siena College, ABC News/The Washington Post, and YouGov. Examples with a 2.5 grade are the Public Policy Institute of California, Pew Research Center, and the University of Illinois Springfield Survey Research Office [@538PollsterRatings].
-
-```{r}
-#| message: false
-#| echo: false
-#| warning: false
-#| label: fig-numeric_grade
-#| fig-cap: Distribution of Pollster Numeric Grades by Population After Cleaning
-poll_cleaned |> 
-  ggplot(aes(x = state_or_national, y = numeric_grade)) +
-  geom_boxplot() + 
-  geom_jitter(aes(color = population), width = 0.2, height = 0, alpha = 0.6) + 
-  scale_y_continuous(breaks = seq(0, 3, by = 0.5)) +
-  labs(x = "State or National Survey", y = "Numeric Grade") +
-  theme_classic()
-```
-
-Since most surveys have sample sizes below 2,500, @fig-sample_size uses the logarithm of sample sizes for clearer visualization. There are significantly more state surveys than national surveys overall. Most national surveys have sample sizes under 2,500, while most state surveys are below 2,000. A few national surveys exceed 7,000, as shown by small red bumps in the distribution.
+The distribution of sample sizes is presented in logarithmic form in @fig-sample_size for clearer visualization. As seen in @fig-sample_size a, there are significantly more state surveys than national surveys overall. Most national surveys have sample sizes under 2,500, while the majority of state surveys fall below 2,000. A few national surveys exceed 7,000, indicated by small red bumps in the distribution. In @fig-sample_size b, most polls target adults as the respondent group, with only a few focusing on voters.
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| label: fig-sample_size
-#| fig-cap: Frequency Distribution of Log-Transformed Sample Sizes for State and National Surveys
+#| layout-ncol: 2
+#| fig-cap: Frequency Distribution of Log-Transformed Sample Sizes
+#| fig-subcap: ["Distribution of Log-Transformed Sample Sizes by Poll Type (State vs. National)", "Distribution of Log-Transformed Sample Sizes by Respondent Group"]
 
 poll_harris_cleaned |>
   ggplot(aes(x = log(sample_size), color = state_or_national)) +
   geom_freqpoly() +
-  labs(x = "Sample Size",y = "Number of occurrences", color = "National or State Survey") +
+  labs(x = "Sample Size",y = "Number of Occurrences", color = "National or State Survey") +
+  theme_classic() + 
+  scale_color_brewer(palette = "Set1")
+
+poll_harris_cleaned |>
+  ggplot(aes(x = log(sample_size), color = population)) +
+  geom_freqpoly() +
+  labs(x = "Sample Size",y = "Number of Occurrences", color = "Respondent Group of Polls") +
   theme_classic() + 
   scale_color_brewer(palette = "Set1")
 ```
 
-The weighted average proportion of support for Harris using the national surveys is 51.3%, as indicated in @tbl-national. Consequently, the proportion of support for Trump is 48.7%, as the dataset considers only respondents who support either Harris or Trump. The difference is relatively small and will decrease when accounting for individuals who do not support either candidate.
+As shown in @fig-harris_support_ratio, state polls exhibit a wider range of support proportions, from below 0.4 to nearly 0.7, reflecting the diverse political landscape across different regions, whereas national polls tend to cluster more closely around a support ratio of 0.5. Interestingly, the mode of support for state polls is slightly below 0.5, while national polls demonstrate a mode and majority support slightly above 0.5.
+```{r}
+#| message: false
+#| echo: false
+#| warning: false
+#| label: fig-harris_support_ratio
+#| fig-cap: Distribution of Harris Support Ratios in State and National Polls
+
+poll_cleaned |> 
+  ggplot(mapping = aes(x = harris_support_ratio, fill = state_or_national)) +
+  geom_histogram(alpha = 0.5, position = "identity", bins = 35) +
+  theme_minimal() +
+  labs(
+    x = "Harris Support Ratio among Support for Harris and Trump", 
+    y = "Number of Polls", 
+    fill = "Poll Type (State/National)"
+  ) +
+  scale_fill_brewer(palette = "Set1")
+```
+
+From @tbl-national, the average proportion of support for Harris using 145 national surveys is 51.3%, and the median support is slightly higher at 51.4%, indicating that just over half of the respondents favor her over Trump, who has an average support of 48.7%. The support for Harris ranges from a minimum of 0.484 to a maximum of 53.6%. With a standard deviation of 0.011, the support levels exhibit low variability, signifying a consistent response pattern among the polls. The weighted average of Harris's support considering sample size is also 51.3%.
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| label: tbl-national
-#| tbl-cap: Weighted Average Proportion of Harris Support from National Surveys
+#| tbl-cap: Summary Statistics for the Proportion of Support for Kamala Harris in National Polls
 
-poll_harris_national_cleaned |>
-  group_by(state) |> 
+poll_harris_national_cleaned |> 
   summarise(
-    Weighted_Avg_Harris_Support = sum(harris_support_ratio * sample_size, na.rm = TRUE) / sum(sample_size, na.rm = TRUE)
+    Mean_Support = round(mean(harris_support_ratio, na.rm = TRUE), 3),
+    Median_Support = round(median(harris_support_ratio, na.rm = TRUE), 3),
+    Min_Support = round(min(harris_support_ratio, na.rm = TRUE), 3),
+    Max_Support = round(max(harris_support_ratio, na.rm = TRUE), 3),
+    SD_Support = round(sd(harris_support_ratio, na.rm = TRUE), 3),
+    Count = n()
   ) |> 
-  mutate(
-    Weighted_Avg_Harris_Support = round(Weighted_Avg_Harris_Support, 3)) |> 
   rename(
-    Survey = state, 
-    'Weighted Average Proportion of Harris Support' = Weighted_Avg_Harris_Support
+    "Avg Support for Harris" = Mean_Support,
+    "Median Support" = Median_Support,
+    "Min Support" = Min_Support,
+    "Max Support" = Max_Support,
+    "SD of Support" = SD_Support,
+    "Total Polls" = Count
   ) |> 
-  kable()
+  kable() |> 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
 \newpage
-@tbl-state shows the number of surveys conducted for each state, if applicable, and the weighted average proportion of support for Harris based on these state surveys. At least 30 polls target Arizona, Georgia, Michigan, North Carolina, Pennsylvania, and Wisconsin. Florida, Nevada, Ohio, Texas, and Virginia each have at least 10 surveys. The remaining states either have a single-digit number of surveys or none at all. Out of the 30 states, 12 show more support for Trump, while 17 have more support for Harris, with North Carolina having exactly equal support for both. In @tbl-state, California, Maryland, Massachusetts, and Washington all have more than 60% support for Harris, representing a 20% lead.
+@tbl-state shows the number of surveys conducted for each state, if applicable, and the weighted average proportion of support for Harris based on these state surveys using sample size. At least 30 polls target Arizona, Georgia, Michigan, North Carolina, Pennsylvania, and Wisconsin. Florida, Nevada, Ohio, Texas, and Virginia each have at least 10 surveys. The remaining states either have a single-digit number of surveys or none at all. Out of the 30 states, 12 show more support for Trump, while 17 have more support for Harris, with North Carolina having exactly equal support for both. In @tbl-state, California, Maryland, Massachusetts, and Washington all have more than 60% support for Harris, representing a 20% lead.
 ```{r}
 #| message: false
 #| echo: false
@@ -169,17 +189,17 @@ poll_harris_state_cleaned |>
   ) |>  
   mutate(
     Weighted_Avg_Harris_Support = round(Weighted_Avg_Harris_Support, 3)) |> 
-  rename('Survey State' = state, 'Number of Survey' = Observations, 'Weighted Average Proportion of Harris Support' = Weighted_Avg_Harris_Support) |> 
+  rename('State of Survey' = state, 'Number of Survey' = Observations, 'Weighted Average Proportion of Harris Support' = Weighted_Avg_Harris_Support) |> 
   kable()
 ```
 
-@fig-state uses a gradient colour scale to present a U.S. map of support by state. The bluer a state is, the higher the predicted proportion of support for Harris; the redder a state appears, the higher the predicted proportion of support for Trump. States shown in grey have no state surveys, so no state-level data is available. States on the West Coast and in the Northeast, such as Massachusetts, California, and Maryland, show high support for Harris, while states in the Midwest, including Utah, Montana, and Indiana, show strong support for Trump.
+@fig-state uses a gradient colour scale to present a U.S. map of weighted support by state. The bluer a state is, the higher the predicted proportion of support for Harris; the redder a state appears, the higher the predicted proportion of support for Trump. States shown in grey have no state surveys, so no state-level data is available. States on the West Coast and in the Northeast, such as Massachusetts, California, and Maryland, show high support for Harris, while states in the Midwest, including Utah, Montana, and Indiana, show strong support for Trump.
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| label: fig-state
-#| fig-cap: Proportion of Harris Support by State from State Surveys
+#| fig-cap: Proportion of Harris Support by State from State Surveys (Weighted)
 
 all_states <- data.frame(
   state = c(
@@ -273,32 +293,42 @@ modelplot(harris_model, conf_level = 0.95, color = 'royalblue3') +
 
 \newpage
 # Results {#sec-results}
-The predicted national support is shown in @tbl-national_prediction. The forecast indicates that 50.8% of voters would vote for Harris, while 49.2% would vote for Trump if we only consider voters who will choose one of them.
+The predicted national support is shown in @tbl-national_prediction. The forecast indicates that 50.9% of voters would choose Harris, while 49.1% would choose Trump if we only consider voters selecting one of them. Harris's support ranges from 47.7% to 58%, with a standard deviation of 0.014, which is slightly larger than the standard deviation in @tbl-national, indicating greater variation after prediction. The weighted average of Harris's support, considering sample size, is 50.8%, very close to the unweighted 50.9%.
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| label: tbl-national_prediction
-#| tbl-cap: Predicted Proportion of Harris Support Based on National Surveys
+#| tbl-cap: Summary Statistics for the Predicted Proportion of Support for Kamala Harris in National Polls
 
-poll_harris_national_cleaned |> 
-  group_by(state) |> 
+poll_harris_national_cleaned |>
   summarise(
-    Weighted_Avg_Harris_Support = sum(predicted_harris_ratio * sample_size, na.rm = TRUE) / sum(sample_size, na.rm = TRUE)) |> 
-   mutate(
-    Weighted_Avg_Harris_Support = round(Weighted_Avg_Harris_Support, 3)) |>
-  rename('National' = state, 'Predicted Proportion of Support For Harris' = Weighted_Avg_Harris_Support) |> 
-  kable()
-
+    Mean_Support = round(mean(predicted_harris_ratio, na.rm = TRUE), 3),
+    Median_Support = round(median(predicted_harris_ratio, na.rm = TRUE), 3),
+    Min_Support = round(min(predicted_harris_ratio, na.rm = TRUE), 3),
+    Max_Support = round(max(predicted_harris_ratio, na.rm = TRUE), 3),
+    SD_Support = round(sd(predicted_harris_ratio, na.rm = TRUE), 3),
+    Count = n()
+  ) |> 
+  rename(
+    "Avg Support for Harris" = Mean_Support,
+    "Median Support" = Median_Support,
+    "Min Support" = Min_Support,
+    "Max Support" = Max_Support,
+    "SD of Support" = SD_Support,
+    "Total Polls" = Count
+  ) |> 
+  kable() |> 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"))
 ```
 
-The predicted support by state is displayed in @tbl-state_prediction. Compared to @tbl-state, the proportion of support is overall more concentrated around 50%. Out of the 30 states with data, 15 states show higher support for Harris, 12 states have higher support for Trump, while 3 states have equal support for both candidates. Maryland still has a support rate for Harris that exceeds 60%, and other states with high support for Harris include Rhode Island, New Hampshire, Massachusetts, Maine, California, and Connecticut, all exceeding 55%. South Carolina is the only state with less than 45% support for Harris.
+The predicted weighted support, using sample size, by state is displayed in @tbl-state_prediction. Compared to @tbl-state, the proportion of support is overall more concentrated around 50%. Out of the 30 states with data, 15 states show higher support for Harris, 12 states have higher support for Trump, while 3 states have equal support for both candidates. Maryland still has a support rate for Harris that exceeds 60%, and other states with high support for Harris include Rhode Island, New Hampshire, Massachusetts, Maine, California, and Connecticut, all exceeding 55%. South Carolina is the only state with less than 45% support for Harris.
 ```{r}
 #| message: false
 #| echo: false
 #| warning: false
 #| label: tbl-state_prediction
-#| tbl-cap: Predicted Proportion of Harris Support Based on State Surveys
+#| tbl-cap: Predicted Weighted Proportion of Harris Support Based on State Surveys
 
 poll_harris_state_cleaned |> 
   group_by(state) |> 
@@ -307,11 +337,11 @@ poll_harris_state_cleaned |>
   ) |>  
   mutate(
     Weighted_Avg_Harris_Support = round(Weighted_Avg_Harris_Support, 3)) |>
-  rename('State' = state, 'Predicted Proportion of Support For Harris' = Weighted_Avg_Harris_Support) |> 
+  rename('State' = state, 'Predicted Proportion of Support For Harris (Weighted)' = Weighted_Avg_Harris_Support) |> 
   kable()
 ```
 \newpage
-@fig-state_prediction uses a gradient colour scale to indicate the predicted support rate by state. States on the West Coast and in the Northeast show a higher rate of support for Harris, with Maryland and California being the bluest. In contrast, states in the Midwest have higher support for Trump, with South Carolina appearing the reddest. Compared to @fig-state, the overall colour is lighter, indicating that the model has mitigated certain biases and preferences.
+@fig-state_prediction uses a gradient colour scale to indicate the predicted weighted support rate by state. States on the West Coast and in the Northeast show a higher rate of support for Harris, with Maryland and California being the bluest. In contrast, states in the Midwest have higher support for Trump, with South Carolina appearing the reddest. Compared to @fig-state, the overall colour is lighter, indicating that the model has mitigated certain biases and preferences.
 ```{r}
 #| message: false
 #| echo: false
@@ -375,7 +405,7 @@ Polling methodology can introduce sampling biases, as different data collection 
 #| echo: false
 #| warning: false
 #| label: fig-methodology
-#| fig-cap: Harris's Support in Nebraska by Polling Methodology
+#| fig-cap: Harris's Support in Nebraska by Polling Methodology (Weighted)
 
 poll_harris_cleaned |> group_by(methodology, state) |> 
   summarise(
@@ -414,7 +444,7 @@ YouGov uses a multilevel regression with post-stratification model for vote esti
 For the 2024 Presidential Election trackers on the YouGov website, the data comes from regular tracking surveys conducted by YouGov. The Question is “In November 2024, who would you vote for in the presidential election if these were the candidates?”, with question wording and response options varied over time [@yougov2024Presidential]. Respondents were selected using random sampling, stratified by gender, age, race, education, geographic region, and voter registration from the most recent American Community Survey. The sample was weighted according to gender, age, race, education, 2020 election turnout and presidential vote, baseline party identification, and current voter registration status. One weakness is that the census data used for weighting is 2019 American Community Survey, which was five years ago. The results may be more accurate if they use newest census data.
 
 ## Idealized Survey and Its Methodology
-If I had a budget of $100K to forecast the U.S. presidential election, I would conduct one survey now and another one after a week, both aiming for a sample size of 5,000 to 8,000 respondents for a 5-minute survey with 10 questions. I believe fewer people have the patience to finish a long survey. I would use stratified sampling to ensure that the sample reflects the U.S. population in terms of key demographics such as age, gender, race, education, region, and political affiliation.
+If I had a budget of $100K to forecast the U.S. presidential election, I would conduct one survey now and another one after a week, both aiming for a sample size of 5,000 to 8,000 respondents for a 5 to 10 minutes survey with 15 questions. I believe fewer people have the patience to finish a long survey. I would use stratified sampling to ensure that the sample reflects the U.S. population in terms of key demographics such as age, gender, race, education, region, and political affiliation.
 
 I would build the main body of respondents through an online opt-in panel. This online panel would be recruited using a mix of traditional advertising, partnerships with news websites such as The New York Times, and social media outreach to ensure diverse representation. I would allocate more of the budget to social media platforms like Instagram and YouTube because most people use these platforms, and the expected participation rate would be lower on social media compared to news media. Special attention would be paid to recruiting underrepresented groups, such as rural populations, non-college-educated voters, and minority communities. I would allocate $2,500 as five 500 dollars rewards to incentivize participants.
 
@@ -426,7 +456,7 @@ Budget Allocation: 70K for recruitment and advertising; 5K for Incentives for re
 
 The link to the survey is here:
 
-- https://docs.google.com/forms/d/1-Y5sP8OanQfRrT6uXLJq9o8lg2_fefanxU9FQWxAf1c/prefill
+- https://docs.google.com/forms/d/e/1FAIpQLSeCFvjTdktOWxJnHqrWZkQbJth7xLXj3\\YUuTkUWn0zvGGEbfw/viewform
 
 The survey questions are listed below:
 
@@ -484,6 +514,28 @@ The survey questions are listed below:
     - a. Yes
     - b. No
     - c. Prefer not to say
+    
+11. **How important are the following issues to you when deciding who to vote for? **
+    - Economy and Taxes
+    - Social Justice
+    - Healthcare
+    - Climate
+    - Gun Control
+    - Immigration
+    
+12. **On a scale 1 to 5, how likely are you going to vote?**
+
+13. **How important do you think voting is?**
+
+14. **What factors motivate you to vote? (Select all that apply)**
+    - Concerns about specific issues
+    - Media Coverage
+    - Candidate personality
+    - Influence of family and friends
+    - Campaign promises
+    - I always vote
+    
+15. **Any other thoughts or comments?**
 
 ## Data Cleaning {#sec-appendix-cleaning}
 I began by using the `clean_names()` function to standardize column names and then selected the most relevant variables as indicated in @sec-data_overview. To ensure data quality, I dropped any rows with missing values in the `numeric_grade` column and filtered out polls with a numeric grade less than 2, focusing on more reliable data. I also modified the `state` column to replace any missing state entries with “National” and standardized state names.
