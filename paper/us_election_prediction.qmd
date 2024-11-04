@@ -328,7 +328,7 @@ harris_model <- readRDS(here::here("model", "model.rds"))
 #| fig-height: 6.5
 
 modelplot(harris_model, conf_level = 0.95, color = 'royalblue3') +
-  labs(x = "Harris Support and 95% Confidence Interval") +
+  labs(x = "Coefficients of Harris Support and 95% Confidence Intervals") +
   theme(
     text = element_text(size = 8), 
     axis.title = element_text(size = 9), 
@@ -427,7 +427,7 @@ ggplot(map_data2, aes(fill = average_harris_support_ratio2, state = state)) +
         axis.text = element_blank(),
         axis.ticks = element_blank()) +
   labs(fill = "Proportion of Respondents \nSupporting Harris",
-       caption = "Map of Predicted Proportion of Support for Harris by State")
+       title = "Map of Predicted Proportion of Support for Harris by State")
 ```
 Considering the 28 states with data, the total electoral votes for Harris is 217, while Trump has 113 votes. Among the other states without data, Illinois, with 19 votes, has historically been a strong Democratic state, whereas Tennessee, with 11 votes, has been a strong Republican state [@270towinhistoryElectoral]. Additionally, many of the excluded states, such as Wyoming, West Virginia, and Oklahoma, have a strong Republican inclination, indicating that Harris’s lead in electoral votes among 28 states is not guaranteed.
 
@@ -464,6 +464,13 @@ Some people who believe Trump will win talk about the concept of “shy Trump vo
 Instead of "shy Trump voters", the real issue may be non-response bias. This occurs when pollsters fail to reach certain voter groups, rather than when individuals hide their true intentions. In both 2016 and 2020, pollsters struggled to connect with enough Trump supporters, likely because Trump’s base often has lower civic engagement, making them less likely to participate in surveys [@nytimesOpinionNate].
 
 Additionally, as a Black female candidate, Kamala Harris could face unique challenges. While the "Bradley effect" -- where voters hesitate to admit they won’t vote for a Black candidate -- didn’t affect Barack Obama in the past, Harris could still encounter similar obstacles. For instance, in 2016, undecided voters leaned away from Hillary Clinton, which might be a risk for Harris [@nytimesOpinionNate].
+
+## Electoral Votes and Swing States
+The predicted support for Harris in each state, based on @tbl-state_prediction, shows that Harris leads with 217 electoral votes, while Trump holds 113. Among the three tied states, Michigan, Nebraska, and Texas, Texas is typically Republican-leaning and has a substantial number of electoral votes, suggesting that support for Trump may be underestimated. Although the difference between support for the Republican and Democratic parties has been narrowing over the years, with Democratic support rising from 38.0% of voters in 2000 to 46.5% in 2020 [@270towinTexas], there was still more than a 5% Republican lead in the last election. If Texas, with its 40 electoral votes, ultimately leans Republican, this would significantly boost Trump’s standing in the electoral count. Additionally, certain states not included in this analysis, such as Wyoming, West Virginia, and Oklahoma, are known to have strong Republican inclinations, suggesting that Harris’s lead in electoral votes among these 28 states may not guarantee an overall lead nationwide. 
+
+Regarding swing states, Florida, with 48.9% support for Harris, is the only state indicating at least a 2% lead. Among other states, Nevada, Pennsylvania, and Wisconsin show a slight preference for Harris, while Arizona, Georgia, and North Carolina show slight support for Trump [@270towinhistoryElectoral]. These small leads remain uncertain, with support close to evenly split.
+
+Swing states or states without data that have more than 15 electoral votes include Pennsylvania (slightly prefers Harris), Illinois (no data), Georgia (slightly prefers Trump), Michigan (tied), and North Carolina (slightly prefers Trump).
 
 ## Limitations and Weaknesses
 I eliminated all polls conducted by pollsters with a grade lower than 2.5, as this grade is assigned by FiveThirtyEight based on historical accuracy and methodological transparency. However, one potential weakness of the model is that I also included the numeric grade as a predictor, which may duplicate its effect on the model.

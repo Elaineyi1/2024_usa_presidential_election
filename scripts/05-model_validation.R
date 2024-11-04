@@ -2,13 +2,13 @@
 # Purpose: Download and Read in data from fivethirtyeight
 # Author: Boxuan Yi
 # Email: boxuan.yi@mail.utoronto.ca
-# Date: 2 November 2024
+# Date: 4 November 2024
 # Prerequisites: None
 
 library(dplyr)
 
-# The model was created using the polls that ended before Oct 25th.
-# This model validation includes the polls that ended after Oct 25th 
+# The model was created using polls that ended before October 25th.
+# The model validation tests include polls that ended after October 25th 
 # to test the model.
 
 poll_model_validation <- read_csv(
