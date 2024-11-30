@@ -1,3 +1,4 @@
+#### Preamble ####
 # Purpose: Simulate the data
 # Author: Boxuan Yi
 # Email: boxuan.yi@mail.utoronto.ca

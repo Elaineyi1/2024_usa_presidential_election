@@ -10,7 +10,7 @@ library(haven)
 library(tidyr)
 library(janitor)
 library(arrow)
-library(dplyr) 
+library(dplyr)
 
 follow_up_raw <- read_sas(here("data", "01-raw_data", 
                                "nsch_2023e_topical.sas7bdat"))
